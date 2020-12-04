@@ -1,11 +1,5 @@
-import gym
-from gym import wrappers, logger
 import numpy as np
-import pickle
-import json, sys, os
-from os import path
 
-import argparse
 '''
 solve continuous binary decision problem
 '''
@@ -28,7 +22,7 @@ class CELearning:
     def get_reward(self, theta, num_steps=200):
         total_reward = 0
         state = self.env.reset()
-        for t in range(num_steps):
+        for _ in range(num_steps):
             action = self.select_action(state, theta)
             state, reward, done, _ = self.env.step(action)
             total_reward += reward

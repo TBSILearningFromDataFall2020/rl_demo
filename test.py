@@ -1,6 +1,5 @@
 import unittest
 import numpy as np
-import gym
 
 from maze import MazeEnvSample3x3, MazeEnvSpecial4x4
 from ipendulum import InvertedPendulumEnv

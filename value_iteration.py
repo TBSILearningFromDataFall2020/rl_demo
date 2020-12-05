@@ -3,7 +3,7 @@ import numpy as np
 
 class ValueIteration:
     '''
-    solve discrete 2D reinforcement learning
+    solve discrete 2D reinforcement learning problem
     '''
     def __init__(self, env, gamma=0.8, max_iter=100):
         self.env = env

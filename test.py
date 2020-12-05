@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from sklearn.utils._testing import assert_array_almost_equal
 
-from maze import MazeEnvSample3x3, MazeEnvSpecial4x4
+from maze import MazeEnvSample3x3, MazeEnvSpecial4x4, MazeEnvSpecial5x5
 from ipendulum import InvertedPendulumEnv
 
 from qlearning import QTableLearning
@@ -32,20 +32,6 @@ class TestMaze(unittest.TestCase):
         self.assertTrue(reward < 0)
         self.assertTrue(done)
 
-    def test_3x3_maze_q_table_learning(self):
-        env = MazeEnvSample3x3()
-        alg = QTableLearning(env)
-        alg.train()
-        done_cnt = 0
-        current_state = env.reset()
-        while True:
-            action = alg.predict(current_state)
-            current_state, reward, done, _ = env.step(action)
-            if done:
-                break
-            done_cnt += 1
-        self.assertTrue(done_cnt < 10)
-
     def test_3x3_maze_value_iteration(self):
         env = MazeEnvSample3x3()
         alg = ValueIteration(env, max_iter=90)
@@ -57,11 +43,12 @@ class TestMaze(unittest.TestCase):
         current_state = env.reset()
         while True:
             action = alg.predict(current_state)
-            current_state, _, done, _ = env.step(action)
+            current_state, reward, done, _ = env.step(action)
             if done:
                 break
             done_cnt += 1
         self.assertEqual(done_cnt, 3)
+        self.assertEqual(reward, 1)
 
     def test_4x4_maze_value_iteration(self):
         env = MazeEnvSpecial4x4()
@@ -71,11 +58,28 @@ class TestMaze(unittest.TestCase):
         current_state = env.reset()
         while True:
             action = alg.predict(current_state)
-            current_state, _, done, _ = env.step(action)
+            current_state, reward, done, _ = env.step(action)
             if done:
                 break
             done_cnt += 1
         self.assertEqual(done_cnt, 5)
+        self.assertEqual(reward, 4)
+
+    def test_5x5_maze_value_iteration(self):
+        env = MazeEnvSpecial5x5()
+        alg = ValueIteration(env)
+        alg.train()
+        done_cnt = 0
+        current_state = env.reset()
+        while True:
+            action = alg.predict(current_state)
+            print(current_state)
+            current_state, reward, done, _ = env.step(action)
+            if done:
+                break
+            done_cnt += 1
+        self.assertEqual(done_cnt, 15)
+        self.assertEqual(reward, 1)
 
 class TestPendulum(unittest.TestCase):
     def test_model(self):

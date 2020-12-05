@@ -28,7 +28,7 @@ class MazeEnv:
 
         if next_state[0] < 0 or next_state[0] >= self.max_row or \
             next_state[1] < 0 or next_state[1] >= self.max_col:
-            next_state = self.state # stay at current position
+            next_state = state # stay at current position
         return next_state
 
     def step(self, action):

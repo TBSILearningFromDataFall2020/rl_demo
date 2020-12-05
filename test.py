@@ -1,10 +1,12 @@
 import unittest
 import numpy as np
+from sklearn.utils._testing import assert_array_almost_equal
 
 from maze import MazeEnvSample3x3, MazeEnvSpecial4x4
 from ipendulum import InvertedPendulumEnv
 
 from qlearning import QTableLearning
+from value_iteration import ValueIteration
 from policy_learning import CELearning
 
 class TestMaze(unittest.TestCase):
@@ -43,6 +45,23 @@ class TestMaze(unittest.TestCase):
                 break
             done_cnt += 1
         self.assertTrue(done_cnt < 10)
+
+    def test_3x3_maze_value_iteration(self):
+        env = MazeEnvSample3x3()
+        alg = ValueIteration(env, max_iter=90)
+        alg.train()
+        expected_values = np.array([[2.048, 2.56, 3.2], [2.56, 3.2, 4], [3.2, 4, 5]])
+        # expected values are solved by Bell equation x = 1 + 0.8 * x for V[2, 2] = 5, etc..
+        assert_array_almost_equal(alg.values, expected_values)
+        done_cnt = 0
+        current_state = env.reset()
+        while True:
+            action = alg.predict(current_state)
+            current_state, _, done, _ = env.step(action)
+            if done:
+                break
+            done_cnt += 1
+        self.assertEqual(done_cnt, 3)
 
     def test_4x4_maze_q_table_learning(self):
         env = MazeEnvSpecial4x4()

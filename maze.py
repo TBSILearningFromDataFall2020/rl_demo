@@ -18,6 +18,19 @@ class MazeEnv:
         self.action_space = Discrete(4)
         self.observation_space = Box([0, 0], [self.max_row - 1, self.max_col - 1])
 
+    def peek_step(self, state, action):
+        """return the next step"""
+        state_shift = self.action_map[action]
+
+        next_state = [0, 0]
+        next_state[0] = state[0] + state_shift[0]
+        next_state[1] = state[1] + state_shift[1]
+
+        if next_state[0] < 0 or next_state[0] >= self.max_row or \
+            next_state[1] < 0 or next_state[1] >= self.max_col:
+            next_state = self.state # stay at current position
+        return next_state
+
     def step(self, action):
         """Given an action, outputs the reward.
         Args:
@@ -31,15 +44,8 @@ class MazeEnv:
         """
 
         done = False
-        state_shift = self.action_map[action]
 
-        next_state = [0, 0]
-        next_state[0] = self.state[0] + state_shift[0]
-        next_state[1] = self.state[1] + state_shift[1]
-
-        if next_state[0] < 0 or next_state[0] >= self.max_row or \
-            next_state[1] < 0 or next_state[1] >= self.max_col:
-            next_state = self.state # stay at current position
+        next_state = self.peek_step(self.state, action)
 
         reward = self.reward[next_state[0], next_state[1]]
 

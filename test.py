@@ -63,19 +63,19 @@ class TestMaze(unittest.TestCase):
             done_cnt += 1
         self.assertEqual(done_cnt, 3)
 
-    def test_4x4_maze_q_table_learning(self):
+    def test_4x4_maze_value_iteration(self):
         env = MazeEnvSpecial4x4()
-        alg = QTableLearning(env)
+        alg = ValueIteration(env)
         alg.train()
         done_cnt = 0
         current_state = env.reset()
         while True:
             action = alg.predict(current_state)
-            current_state, reward, done, _ = env.step(action)
+            current_state, _, done, _ = env.step(action)
             if done:
                 break
             done_cnt += 1
-        self.assertTrue(done_cnt < 10)
+        self.assertEqual(done_cnt, 5)
 
 class TestPendulum(unittest.TestCase):
     def test_model(self):

@@ -73,7 +73,6 @@ class TestMaze(unittest.TestCase):
         current_state = env.reset()
         while True:
             action = alg.predict(current_state)
-            print(current_state)
             current_state, reward, done, _ = env.step(action)
             if done:
                 break

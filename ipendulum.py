@@ -21,22 +21,11 @@ class InvertedPendulumEnv:
         upper_bound = [self.delta_theta, self.delta_theta, np.Inf, np.Inf]
         self.observation_space = Box(lower_bound, upper_bound)
         self.reset()
-
-    def step(self, action):
-        """Given an action, outputs the reward.
-        Args:
-            action: boolean, an action taken by the agent
-
-        Outputs:
-            next_state: 1 x 4 array, the next state of the agent
-            reward: float, the reward at the next state
-            done: bool, stop or continue learning
-        """
-        
-        x = self.state[0]
-        x_dot = self.state[2]
-        theta = self.state[1]
-        theta_dot = self.state[3]
+    def peek_step(self, state, action):
+        x = state[0]
+        x_dot = state[2]
+        theta = state[1]
+        theta_dot = state[3]        
         if action:
             F = self.F
         else:
@@ -52,16 +41,32 @@ class InvertedPendulumEnv:
         theta_prime = theta + self.tau * theta_dot
         x_prime_dot = x_dot + self.tau * x_double_dot
         theta_prime_dot = theta_dot + self.tau * theta_double_dot
-        self.state = np.array([x_prime, theta_prime, x_prime_dot,
+        return np.array([x_prime, theta_prime, x_prime_dot,
                       theta_prime_dot])
+
+    def step(self, action):
+        """Given an action, outputs the reward.
+        Args:
+            action: boolean, an action taken by the agent
+
+        Outputs:
+            next_state: 1 x 4 array, the next state of the agent
+            reward: float, the reward at the next state
+            done: bool, stop or continue learning
+        """
+        
+
+        next_state = self.peek_step(self.state, action)
+
 
         reward = 1
         # check termination condition
-        if np.abs(theta_prime) > self.delta_theta_prime or \
-            np.abs(x_prime) > self.delta_x:
+        if np.abs(next_state[1]) > self.delta_theta_prime or \
+            np.abs(next_state[0]) > self.delta_x:
             done = True
         else:
             done = False
+        self.state = next_state
 
         return self.state, reward, done, None
 

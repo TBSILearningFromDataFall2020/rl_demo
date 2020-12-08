@@ -19,7 +19,7 @@ class MazeEnv:
         self.observation_space = Box([0, 0], [self.max_row - 1, self.max_col - 1])
 
     def peek_step(self, state, action):
-        """return the next step"""
+        """return the next step without updating state"""
         state_shift = self.action_map[action]
 
         next_state = [0, 0]
@@ -41,6 +41,7 @@ class MazeEnv:
             next_state: list, next state of the agent
             reward: float, the reward at the next state
             done: bool, stop or continue learning
+            Info: always None, compatible with gym.env
         """
 
         done = False

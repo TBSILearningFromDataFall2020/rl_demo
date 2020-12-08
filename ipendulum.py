@@ -17,6 +17,8 @@ class InvertedPendulumEnv:
         self.L = 0.5
         self.g = 9.8
         self.action_space = Discrete(2)
+        # reward function based solely on the relative position
+        self.reward = lambda theta: 1.0
         lower_bound = [-1.0 * self.delta_theta, -1.0 * self.delta_theta, -1.0 * np.Inf, -1.0 * np.Inf]
         upper_bound = [self.delta_theta, self.delta_theta, np.Inf, np.Inf]
         self.observation_space = Box(lower_bound, upper_bound)
@@ -59,7 +61,7 @@ class InvertedPendulumEnv:
         next_state = self.peek_step(self.state, action)
 
 
-        reward = 1
+        reward = self.reward(next_state[1])
         # check termination condition
         if np.abs(next_state[1]) > self.delta_theta_prime or \
             np.abs(next_state[0]) > self.delta_x:

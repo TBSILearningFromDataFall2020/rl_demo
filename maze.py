@@ -73,7 +73,7 @@ class MazeEnvSample3x3(MazeEnv):
 class MazeEnvSpecial4x4(MazeEnv):
     def __init__(self):
         reward_matrix = np.zeros([4, 4], dtype=int)
-        reward_matrix[3, 3] = 4
+        reward_matrix[3, 3] = 5
         reward_matrix[1, 1] = -5 # block which could not be reached
         reward_matrix[1, 3] = -5
         reward_matrix[3, 1] = -5

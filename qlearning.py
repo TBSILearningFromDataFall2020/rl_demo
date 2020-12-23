@@ -47,8 +47,10 @@ class QTableLearning:
         self.q_table[state][action] = current_q + self.alpha * (reward + self.gamma * max(self.q_table[next_state]) - current_q)
         return
   
-    def train(self):
-        for i in range(self.max_iter):
+    def train(self, epoch = None):
+        if not epoch:
+            epoch = self.max_iter
+        for i in range(epoch):
             current_state = self.env.reset()
             current_state_tuple = tuple(current_state)
             while True:
